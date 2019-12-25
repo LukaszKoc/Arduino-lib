@@ -1,8 +1,10 @@
 #define AR2D2_BUZZER 13
 #define RANDOM_GENERATOR_PIN A0
 
-#define RX_PIN 6
-#define TX_PIN 7
+#define ARDUINO_ENV 1
+
+#define RX_PIN 9
+#define TX_PIN 8
 
 // //MOTOR 
 // #define MOTOR_R_TURN_1_PIN D1

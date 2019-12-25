@@ -1,17 +1,17 @@
 #ifndef MotorControl_h
 #define MotorControl_h 
 
-#define DC_FREQUENCY 64
+
 
 class MotorControl {
 	private:
 		int input1, input2, speed_pin;
-		ArduinoUtil util;
 		void changeDirection(boolean isForward);
 		void drive(boolean isForward, int speed);
 	public:
 		void setup();
 		void stop();
+		void neutral();
 		void setSpeed(int speed);
 		MotorControl(){}
 		MotorControl(int input1_arg, int input2_arg) {
@@ -22,17 +22,15 @@ class MotorControl {
 
 void MotorControl::setup() {
 	analogWriteFreq(DC_FREQUENCY);
+	analogWriteRange(DC_RANGE);
 	pinMode(input1, OUTPUT);
 	pinMode(input2, OUTPUT);
-	drive(true, 0);
+	neutral();
 }
 
 void MotorControl::setSpeed(int speed) {
 	bool direction = speed > 0;
 	speed = abs(speed);
-	if(speed < 100) {
-		return;
-	}
 	drive(direction, speed); //max speed Arduino: 255 ESP:1024
 }
 
@@ -41,12 +39,18 @@ void MotorControl::stop() {
 	analogWrite(input2, LOW);
 }
 
+void MotorControl::neutral() {
+	drive(true, 0);
+}
+
 void MotorControl::drive(boolean isForward, int speed = 1024) {
-	stop();
 	if(isForward) {
+		Serial.println(speed);
 		analogWrite(input1, speed);
 		analogWrite(input2, LOW);
 	} else {
+		Serial.print("-");
+		Serial.println(speed);
 		analogWrite(input1, LOW);
 		analogWrite(input2, speed);
 	}

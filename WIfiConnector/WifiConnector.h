@@ -5,8 +5,8 @@
 #define port 80
 WiFiServer server(port);
 //TODO create connection List htstName/pass/IPs
-IPAddress staticIP(192, 168, 0, 140); //ESP static ip
-IPAddress gateway(192, 168, 0, 1);   //IP Address of your WiFi Router (Gateway)
+IPAddress staticIP(192, 168, 1, 140); //ESP static ip
+IPAddress gateway(192, 168, 1, 100);   //IP Address of your WiFi Router (Gateway)
 IPAddress subnet(255, 255, 255, 0);  //Subnet mask
 
 class WifiConnector {
@@ -53,14 +53,14 @@ void WifiConnector::activate() {
 	if (!client) {
 		return;
 	}
-	// Serial.println("new client");
+	//Serial.println("new client");
 	while(!client.available()) {
 		delay(1);
 	}
 	// Read the first line of the request
 	req = client.readStringUntil('\r');
-	// Serial.println();
-	// Serial.println(req);
+	//Serial.println();
+	//Serial.println(req);
 	client.flush();
 
 	if (req.indexOf("GET") != -1) {
@@ -97,18 +97,18 @@ String WifiConnector::getResponseStatus(int code) {
 
 
 void WifiConnector::openAccessPoint() {
-	Serial.println("Setting soft-AP ... ");
+	//Serial.println("Setting soft-AP ... ");
 	WiFi.hostname("robot-wifi");
   	WiFi.mode(WIFI_AP_STA);
 	boolean result = 
 		WiFi.softAPConfig(staticIP, gateway, subnet) && 
 		WiFi.softAP("ESP_ROBOT");
 	if(result == true) {
-		Serial.println("Acces ponit Ready");
+		//Serial.println("Acces ponit Ready");
 	} else {
-		Serial.println("Acces ponit Failed!");
+		//Serial.println("Acces ponit Failed!");
 	}
-	Serial.println(WiFi.localIP());
+	//Serial.println(WiFi.localIP());
 }
 
 void WifiConnector::connect(char* ssid, char* password) {

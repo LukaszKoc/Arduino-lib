@@ -1,11 +1,6 @@
 #ifndef SpeedControl_h
 #define SpeedControl_h 
 
-/**
-* distance - total distance driven in cm
-* avgSpeed - avg speed in m/s
-* currentSpeed = current speed in m/s 
-**/
 float milisecPerCentimeter = 0.0;
 
 float currentSpeedL = 0.0;
@@ -60,8 +55,6 @@ void SpeedControl::setup( ) {
 float SpeedControl::getSpeedL() {
   if (pulsesChangedL != 0) {
     pulsesChangedL = 0;
-    Serial.println(String("currentSpeedL: ") + currentSpeedL);
-    Serial.println(String("pulsesL: ") + pulsesL);
     return currentSpeedL;
   }
   return 0.00;
@@ -70,8 +63,6 @@ float SpeedControl::getSpeedL() {
 float SpeedControl::getSpeedR() {
   if (pulsesChangedR != 0) {
     pulsesChangedR = 0;
-    Serial.println(String("currentSpeedR: ") + currentSpeedR);
-    Serial.println(String("pulsesR: ") + pulsesR);
     return currentSpeedR;
   }
   return 0.00;

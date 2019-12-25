@@ -1,11 +1,6 @@
 #ifndef SpeedControl_h
 #define SpeedControl_h 
 
-/**
-* distance - total distance driven in cm
-* avgSpeed - avg speed in m/s
-* currentSpeed = current speed in m/s 
-**/
 float milisecPerCentimeter = 0.0;
 
 float currentSpeedL = 0.0;

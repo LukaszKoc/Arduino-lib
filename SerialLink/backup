@@ -1,21 +1,22 @@
 
 #ifndef SerialLink_h
 #define SerialLink_h 
- 
-#include <AltSoftSerial.h>
+#include <SoftwareSerial.h>
 
-#define BAUD_RATE 9600
+#if defined(NODEMCU_ENV)
+  SoftwareSerial serialToRemote;
+#else
+  SoftwareSerial serialToRemote(RX_PIN, TX_PIN);
+#endif
+#define DEFAULT_BAUD_RATE 9600
 #define MSG_START_MARK "#"
 #define MSG_OVER_MARK "$"
 
 int MSG_LABELS_COUNT = 2;
 String MSG_LABELS[] = {"SPEED", "DIRESTIONS"};
 
-AltSoftSerial serialToRemote;
-
 class SerialLink {
   private:
-    bool printData = false;
     void readMessageData(String msg, int &x, int &y);
     int find(String arr[], String value);
   public:
@@ -25,14 +26,17 @@ class SerialLink {
     void write(float speedL, float speedR);
     String midString(String str, String start, String finish);
     void setup(int baudRate);
-    SerialLink(bool print_data = false){
-      printData = print_data;
-    }
 }; 
 
-void SerialLink::setup (int baudRate = BAUD_RATE) {
+void SerialLink::setup (int baudRate = DEFAULT_BAUD_RATE) {
   Serial.print("SerialLink setup for ");
-  serialToRemote.begin(baudRate);
+  #if defined(NODEMCU_ENV)
+    Serial.println("NodeMcu");
+    serialToRemote.begin(baudRate, SWSERIAL_8N1, RX_PIN, TX_PIN, false, 95, 11);
+  #else
+    Serial.println("Arduino");
+    serialToRemote.begin(baudRate);
+  #endif
 }
 
 void SerialLink::write(String message) {
@@ -52,7 +56,7 @@ String SerialLink::read() {
   String temp = "";
   String msg = "-1";
 
-  for(char in; serialToRemote.available() > 0;) {
+  for(char in; in != '\n' && serialToRemote.available() > 0;) {
     in = serialToRemote.read();
     temp += String(in);
     Serial.print(in);

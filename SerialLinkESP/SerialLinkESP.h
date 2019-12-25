@@ -2,16 +2,17 @@
 #ifndef SerialLink_h
 #define SerialLink_h 
  
-#include <AltSoftSerial.h>
-
+#include <SoftwareSerial.h>
+ 
 #define BAUD_RATE 9600
+
 #define MSG_START_MARK "#"
 #define MSG_OVER_MARK "$"
 
 int MSG_LABELS_COUNT = 2;
 String MSG_LABELS[] = {"SPEED", "DIRESTIONS"};
 
-AltSoftSerial serialToRemote;
+SoftwareSerial serialToRemote;    
 
 class SerialLink {
   private:
@@ -32,7 +33,9 @@ class SerialLink {
 
 void SerialLink::setup (int baudRate = BAUD_RATE) {
   Serial.print("SerialLink setup for ");
-  serialToRemote.begin(baudRate);
+    Serial.println("NodeMcu");
+  serialToRemote.begin(BAUD_RATE, SWSERIAL_8N1, RX_PIN, TX_PIN, false, 95, 11);
+  Serial.println("\nSoftware serial test started");
 }
 
 void SerialLink::write(String message) {
@@ -66,6 +69,7 @@ String SerialLink::read() {
   yield();
   return msg;
 }
+
 
 void SerialLink::read(int &x, int &y) {
   String msg = read();

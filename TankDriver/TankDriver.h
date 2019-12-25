@@ -1,7 +1,6 @@
 #ifndef TankDriver_h
 #define TankDriver_h 
 
-
 class TankDriver {
 	private:
 		MotorControl motorLeft, motorRight;
@@ -13,7 +12,8 @@ class TankDriver {
 	public:
 		void drive(int x, int y);
 		void stop();
-		void setup();
+		void neutral();
+		int mapSpeed(int speed);
 		TankDriver(MotorControl _motorLeft, MotorControl _motorRight, boolean _singleJoystickMode = true) {
 			motorLeft = _motorLeft;
 			motorRight = _motorRight;
@@ -21,14 +21,11 @@ class TankDriver {
 		}
 };
 
-void TankDriver::setup() {
-}
-
-
 void TankDriver::drive(int y, int x) {
-	stop();
-	delay(5);	
-	
+	neutral();	
+	if(y < 5 && y > -5 && x < 5 && x > -5) {
+		return;
+	}
 	int speedRight, speedLeft;
 	speedLeft = y;
 	speedRight = y;
@@ -55,18 +52,27 @@ void TankDriver::drive(int y, int x) {
 			speedRight = -100;
 		}
 
-	
-	speedLeft = map(speedLeft, 0, 100, 0, 1024);
-	speedRight = map(speedRight, 0, 100, 0, 1024);
 
-	// print(speedLeft, speedRight);
-	motorLeft.setSpeed(speedLeft);
-	motorRight.setSpeed(speedRight);
+	motorLeft.setSpeed(mapSpeed(speedLeft));
+	motorRight.setSpeed(mapSpeed(speedRight));
 }
+
+int TankDriver::mapSpeed(int speed) {
+	if(speed < 0) {
+		return - map(-speed, 0, 100, DC_RANGE/3, DC_RANGE);
+	} else {
+		return  map(speed, 0, 100, DC_RANGE/3, DC_RANGE);	
+	}	
+}
+
 
 void TankDriver::stop() {
 	motorLeft.stop();
 	motorRight.stop();
+}
+void TankDriver::neutral() {
+	motorLeft.neutral();
+	motorRight.neutral();
 }
 
 String TankDriver::calculateDirection(int turn) {
