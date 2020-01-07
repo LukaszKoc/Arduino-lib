@@ -6,7 +6,7 @@
 WiFiServer server(port);
 //TODO create connection List htstName/pass/IPs
 IPAddress staticIP(192, 168, 1, 140); //ESP static ip
-IPAddress gateway(192, 168, 1, 100);   //IP Address of your WiFi Router (Gateway)
+IPAddress gateway(192, 168, 0, 100);   //IP Address of your WiFi Router (Gateway)
 IPAddress subnet(255, 255, 255, 0);  //Subnet mask
 
 class WifiConnector {
